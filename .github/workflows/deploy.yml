@@ -83,6 +83,12 @@ jobs:
             -e "ConnectionStrings__DefaultConnection=${{ secrets.ASPNETCORE_CONNECTIONSTRING }}" \
             $IMAGE_PULL_TAG
           
+          # --- Debugging Step ---
+          echo "Waiting 15 seconds for container to initialize..."
+          sleep 15
+          echo "Fetching container logs for debugging:"
+          docker logs $CONTAINER_NAME
+
           # Clean up old, unused Docker images
           echo "Cleaning up old images..."
           docker image prune -af

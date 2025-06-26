@@ -6,10 +6,6 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  # Creates a lowercase version of the repo name for the image name
-  IMAGE_NAME: ${{ toLower(github.repository) }}
-
 jobs:
   build_and_push_docker_image:
     runs-on: ubuntu-latest
@@ -20,6 +16,9 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+
+    - name: Set image name
+      run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
     - name: Log in to GitHub Container Registry
       uses: docker/login-action@v3
@@ -73,9 +72,12 @@ jobs:
     
     environment:
       name: production
-      url: 'http://${{ secrets.DO_HOST }}'
+      # url: 'http://${{ secrets.DO_HOST }}'
 
     steps:
+    - name: Set image name
+      run: echo "IMAGE_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      
     - name: Deploy to DigitalOcean Droplet via Docker
       uses: appleboy/ssh-action@master
       with:

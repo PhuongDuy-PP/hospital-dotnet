@@ -187,12 +187,18 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.MapOpenApi();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Hospital API V1");
+    c.RoutePrefix = string.Empty; // Set Swagger UI at apps root
+});
+
+
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
-    app.UseSwagger();
-    app.UseSwaggerUI();
-
+    
 }
 
 // Sử dụng CORS - đặt trước UseAuthentication/UseAuthorization

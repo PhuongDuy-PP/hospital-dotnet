@@ -1,0 +1,117 @@
+name: CI/CD Docker Workflow for DigitalOcean
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  # Creates a lowercase version of the repo name for the image name
+  IMAGE_NAME: ${{ lower(github.repository) }}
+
+jobs:
+  build_and_push_docker_image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # Permission to push to GitHub Packages
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Log in to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }} # Use the built-in token for pushing
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        file: ./Dockerfile
+        push: true
+        tags: |
+          ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
+          ghcr.io/${{ env.IMAGE_NAME }}:latest
+
+  generate_migration_script:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore Hospital_API.sln
+
+    - name: Install EF Core Tools
+      run: dotnet tool install --global dotnet-ef
+
+    - name: Generate Migration Script
+      run: |
+        dotnet ef migrations script --idempotent --project Hospital_API/Hospital_API.csproj -o artifacts/migration.sql
+      env:
+        ConnectionStrings__DefaultConnection: "Server=localhost;Database=dummy;"
+
+    - name: Upload migration script artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: migration-script
+        path: artifacts/migration.sql
+
+  deploy-to-production:
+    needs: [build_and_push_docker_image, generate_migration_script]
+    runs-on: ubuntu-latest
+    
+    environment:
+      name: production
+      url: http://${{ secrets.DO_HOST }}
+
+    steps:
+    - name: Deploy to DigitalOcean Droplet via Docker
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.DO_HOST }}
+        username: ${{ secrets.DO_USERNAME }}
+        password: ${{ secrets.DO_PASSWORD }}
+        script: |
+          # --- This script runs on your DigitalOcean server ---
+          # Login to GitHub Container Registry to pull the private image
+          echo ${{ secrets.CR_PAT }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+          # Variables
+          IMAGE_PULL_TAG="ghcr.io/${{ env.IMAGE_NAME }}:latest"
+          CONTAINER_NAME="hospital-api-container"
+
+          # Stop and remove the old container
+          echo "Stopping and removing old container..."
+          docker stop $CONTAINER_NAME || true
+          docker rm $CONTAINER_NAME || true
+
+          # Pull the latest image from the registry
+          echo "Pulling latest Docker image..."
+          docker pull $IMAGE_PULL_TAG
+
+          # Run a new container from the new image
+          echo "Starting new container..."
+          docker run -d \
+            --name $CONTAINER_NAME \
+            --restart always \
+            -p 80:8080 \
+            -e ASPNETCORE_URLS=http://+:8080 \
+            -e "ConnectionStrings__DefaultConnection=${{ secrets.ASPNETCORE_CONNECTIONSTRING }}" \
+            $IMAGE_PULL_TAG
+          
+          # Clean up old, unused Docker images
+          echo "Cleaning up old images..."
+          docker image prune -af
+
+          echo "Deployment completed successfully!" 

@@ -186,6 +186,27 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 
 var app = builder.Build();
 
+// Automatically apply migrations on startup
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        var dbContext = services.GetRequiredService<HospitalDbContext>();
+        logger.LogInformation("Applying database migrations...");
+        dbContext.Database.Migrate();
+        logger.LogInformation("Database migrations applied successfully.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "An error occurred while migrating the database.");
+        // Stop the application from starting if migrations fail.
+        throw;
+    }
+}
+
+
 // Configure the HTTP request pipeline.
 app.MapOpenApi();
 app.UseSwagger();

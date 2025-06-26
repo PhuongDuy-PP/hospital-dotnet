@@ -37,37 +37,8 @@ jobs:
           ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
           ghcr.io/${{ env.IMAGE_NAME }}:latest
 
-  generate_migration_script:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.x'
-
-    - name: Restore dependencies
-      run: dotnet restore hospital-dotnet.sln
-
-    - name: Install EF Core Tools
-      run: dotnet tool install --global dotnet-ef
-
-    - name: Generate Migration Script
-      run: |
-        dotnet ef migrations script --idempotent --project Hospital_API/Hospital_API.csproj -o artifacts/migration.sql
-      env:
-        ConnectionStrings__DefaultConnection: "Server=localhost;Database=dummy;"
-
-    - name: Upload migration script artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: migration-script
-        path: artifacts/migration.sql
-
   deploy-to-production:
-    needs: [build_and_push_docker_image, generate_migration_script]
+    needs: build_and_push_docker_image
     runs-on: ubuntu-latest
     
     environment:

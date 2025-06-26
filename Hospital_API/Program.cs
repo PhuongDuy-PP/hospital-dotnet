@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowMyFrontend",
         policyBuilder =>
         {
-            policyBuilder.WithOrigins("http://localhost:5173") // Cổng frontend của bạn
+            policyBuilder.AllowAnyOrigin() // Cảnh báo: Cho phép tất cả các nguồn có thể gây rủi ro bảo mật.
                          .AllowAnyHeader()
                          .AllowAnyMethod();
         });

@@ -32,7 +32,7 @@ jobs:
       uses: docker/build-push-action@v5
       with:
         context: .
-        file: ./Dockerfile
+        file: ./Hospital_API/Dockerfile
         push: true
         tags: |
           ghcr.io/${{ env.IMAGE_NAME }}:${{ github.sha }}
@@ -50,7 +50,7 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore Hospital_API.sln
+      run: dotnet restore hospital-dotnet.sln
 
     - name: Install EF Core Tools
       run: dotnet tool install --global dotnet-ef

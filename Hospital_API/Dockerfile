@@ -3,11 +3,11 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy solution and project files first to leverage Docker layer caching
-COPY ["Hospital_API.sln", "./"]
+COPY ["hospital-dotnet.sln", "./"]
 COPY ["Hospital_API/Hospital_API.csproj", "Hospital_API/"]
 
 # Restore dependencies for the entire solution
-RUN dotnet restore "Hospital_API.sln"
+RUN dotnet restore "hospital-dotnet.sln"
 
 # Copy the rest of the application's source code
 COPY . .

@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
             policyBuilder.AllowAnyOrigin() // Cảnh báo: Cho phép tất cả các nguồn có thể gây rủi ro bảo mật.
                          .AllowAnyHeader()
                          .AllowAnyMethod();
-        });
+        }); 
 });
 
 
@@ -217,10 +217,10 @@ app.UseSwaggerUI(c =>
 });
 
 
-if (app.Environment.IsDevelopment())
-{
+// if (app.Environment.IsDevelopment())
+// {
     
-}
+// }
 
 // Sử dụng CORS - đặt trước UseAuthentication/UseAuthorization
 app.UseCors("AllowMyFrontend");

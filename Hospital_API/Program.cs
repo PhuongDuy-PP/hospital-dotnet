@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
             policyBuilder.AllowAnyOrigin() // Cảnh báo: Cho phép tất cả các nguồn có thể gây rủi ro bảo mật.
                          .AllowAnyHeader()
                          .AllowAnyMethod();
-        }); 
+        });
 });
 
 

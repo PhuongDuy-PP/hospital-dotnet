@@ -32,9 +32,9 @@ builder.Services.Configure<ForwardedHeadersOptions>(options =>
 {
     options.ForwardedHeaders =
         ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    // Xóa các proxy mặc định và chỉ tin tưởng proxy từ localhost
-    options.KnownProxies.Clear();
-    options.KnownNetworks.Clear();
+    // Bỏ các dòng này để tin tưởng proxy mặc định (bao gồm localhost)
+    // options.KnownProxies.Clear();
+    // options.KnownNetworks.Clear();
 });
 
 // Add services to the container.
@@ -240,7 +240,7 @@ app.UseCors("AllowMyFrontend");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection(); // Không cần thiết khi dùng reverse proxy đã xử lý HTTPS
 app.MapControllers();
 
 

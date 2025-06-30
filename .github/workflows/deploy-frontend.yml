@@ -1,0 +1,55 @@
+name: CI/CD React App to DigitalOcean
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  build-and-deploy-frontend:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    
+    # Path filter: Only run this job if files in the React app directory have changed.
+    defaults:
+      run:
+        working-directory: ./hospital-react-app
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Check for changes in frontend app
+      uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        filters: |
+          frontend:
+            - 'hospital-react-app/**'
+
+    # Only proceed if the 'frontend' filter matched changes.
+    - name: Setup Node.js
+      if: steps.filter.outputs.frontend == 'true'
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Using a recent LTS version
+
+    - name: Install Dependencies
+      if: steps.filter.outputs.frontend == 'true'
+      run: npm install
+
+    - name: Build React App
+      if: steps.filter.outputs.frontend == 'true'
+      run: npm run build
+
+    - name: Deploy to DigitalOcean
+      if: steps.filter.outputs.frontend == 'true'
+      uses: appleboy/scp-action@master
+      with:
+        host: ${{ secrets.DO_HOST }}
+        username: ${{ secrets.DO_USERNAME }}
+        password: ${{ secrets.DO_PASSWORD }}
+        source: "hospital-react-app/dist" # Vite builds to 'dist' by default
+        target: "/var/www/hospital-react-app" # << IMPORTANT: Change this to your actual path
+        strip_components: 2 

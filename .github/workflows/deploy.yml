@@ -79,7 +79,7 @@ jobs:
           docker run -d \
             --name $CONTAINER_NAME \
             --restart always \
-            -p 80:8080 \
+            -p 8080:8080 \
             -e ASPNETCORE_URLS=http://+:8080 \
             -e "ConnectionStrings__DefaultConnection=${{ secrets.ASPNETCORE_CONNECTIONSTRING }}" \
             $IMAGE_PULL_TAG

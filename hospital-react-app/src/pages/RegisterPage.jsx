@@ -40,7 +40,7 @@ const RegisterPage = () => {
         dateOfBirth: formData.dateOfBirth,
       };
 
-      await axios.post('http://159.89.95.146:8080/api/User', dataToSend);
+      await axios.post('https://node43.io.vn/api/User', dataToSend);
 
       toast.success('Registration successful! Redirecting to login page...');
       setTimeout(() => {

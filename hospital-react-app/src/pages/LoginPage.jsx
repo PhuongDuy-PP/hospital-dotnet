@@ -20,7 +20,7 @@ const LoginPage = ({ navigate }) => {
     setError(null); // Clear previous errors
 
     try {
-      const response = await fetch("http://159.89.95.146:8080/api/User/login", {
+      const response = await fetch("https://node43.io.vn/api/User/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -8,6 +8,7 @@ using Hospital_API.Repositories.Interfaces;
 using Hospital_API.Services;
 using Hospital_API.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -26,8 +27,15 @@ builder.Services.AddCors(options =>
         });
 });
 
-
-
+// Cấu hình để ứng dụng nhận diện các header được chuyển tiếp từ Nginx
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    // Xóa các proxy mặc định và chỉ tin tưởng proxy từ localhost
+    options.KnownProxies.Clear();
+    options.KnownNetworks.Clear();
+});
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
@@ -185,6 +193,10 @@ builder.Services.AddScoped<IRoomService, RoomService>();
 
 
 var app = builder.Build();
+
+// Sử dụng middleware để đọc các header được chuyển tiếp
+// Phải được gọi trước các middleware khác như UseRouting, UseAuthentication, v.v.
+app.UseForwardedHeaders();
 
 // Automatically apply migrations on startup
 using (var scope = app.Services.CreateScope())

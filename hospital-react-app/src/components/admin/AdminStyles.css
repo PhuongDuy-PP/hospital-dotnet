@@ -1,0 +1,349 @@
+/* ===================================
+   Admin Layout & Sidebar General
+   =================================== */
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f7f9fc;
+    position: relative;
+}
+
+.admin-sidebar {
+    width: 260px;
+    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+    color: #ecf0f1;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    z-index: 1000;
+    transition: all 0.3s ease-in-out;
+}
+
+.admin-main-content {
+    flex-grow: 1;
+    padding: 30px;
+    transition: margin-left 0.3s ease-in-out;
+    margin-left: 260px;
+}
+
+.admin-main-content.sidebar-closed {
+    margin-left: 0;
+}
+
+/* ===================================
+   Sidebar Header & Logo
+   =================================== */
+.admin-sidebar-header {
+    padding: 20px;
+    text-align: center;
+}
+
+.admin-sidebar-header a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    flex-direction: column;
+}
+
+.admin-sidebar-logo {
+    max-width: 80px;
+    margin-bottom: 10px;
+}
+
+.admin-sidebar-title {
+    color: #ecf0f1;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+/* ===================================
+   Sidebar Menu
+   =================================== */
+.admin-menu {
+    flex-grow: 1;
+    margin-top: 20px;
+}
+
+.admin-menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.admin-menu-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    color: #bdc3c7;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.2s, color 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.admin-menu-link:hover {
+    background-color: rgba(236, 240, 241, 0.05);
+    color: #fff;
+    border-left-color: #3498db;
+}
+
+.admin-menu-link.active {
+    background-color: rgba(236, 240, 241, 0.1);
+    color: #fff;
+    font-weight: 600;
+    border-left-color: #3498db;
+}
+
+.admin-menu-icon {
+    font-size: 1.2rem;
+    margin-right: 15px;
+    width: 20px;
+    text-align: center;
+}
+
+.admin-menu-text {
+    /* Styles for menu text when sidebar is open */
+}
+
+/* ===================================
+   Sidebar Footer
+   =================================== */
+.admin-sidebar-footer {
+    padding: 20px;
+    border-top: 1px solid #46627f;
+}
+
+.admin-footer-text {
+    font-size: 0.8rem;
+    color: #7f8c8d;
+    text-align: center;
+    margin-top: 15px;
+}
+
+/* ===================================
+   Sidebar Toggle & Responsive
+   =================================== */
+.admin-sidebar-toggle-btn {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background-color: #34495e;
+    color: white;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+@media (max-width: 992px) {
+    .admin-sidebar {
+        left: -260px;
+    }
+
+    .admin-sidebar.open {
+        left: 0;
+    }
+
+    .admin-main-content {
+        margin-left: 0;
+    }
+    
+    .admin-sidebar-toggle-btn {
+        display: block;
+    }
+    
+    .admin-main-content.sidebar-open {
+        margin-left: 0; /* Or apply an overlay */
+    }
+}
+
+/* Keep other styles below */
+/* Admin Header */
+.admin-header {
+  background-color: #fff;
+  padding: 20px 40px;
+  border-bottom: 1px solid #dee2e6;
+  margin-bottom: 40px;
+}
+
+.admin-header h1 {
+  font-size: 28px;
+  color: #333;
+  margin: 0;
+}
+
+/* Admin Content Cards */
+.admin-card {
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: all 0.3s ease-in-out;
+}
+
+.admin-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+/* Summary Cards on Dashboard */
+.summary-card {
+    color: #fff;
+}
+.summary-card h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+.summary-card p {
+    font-size: 28px;
+    font-weight: 300;
+    margin: 0;
+}
+.bg-primary { background-color: #007bff !important; }
+.bg-info { background-color: #17a2b8 !important; }
+.bg-success { background-color: #28a745 !important; }
+.bg-warning { background-color: #ffc107 !important; }
+.text-white { color: #fff !important; }
+.text-dark { color: #343a40 !important; }
+
+
+/* General Table Styling */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 0.95rem;
+    vertical-align: top;
+    border-top: 1px solid #dee2e6;
+}
+
+.table thead th {
+    vertical-align: bottom;
+    border-bottom: 2px solid #dee2e6;
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.table tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.table tbody tr:hover {
+    background-color: rgba(0, 123, 255, 0.075);
+}
+
+/* Buttons in table */
+.table .btn {
+    margin-right: 5px;
+}
+
+/* Custom card title for modals */
+.card-title-lg {
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+/* Redesigned Appointment Detail Modal */
+.appointment-modal-body {
+    background-color: #f8f9fa;
+    padding: 2rem;
+}
+
+.info-block {
+    background-color: #fff;
+    padding: 2rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+.info-block:hover {
+    transform: translateY(-5px);
+}
+
+.info-block .avatar-container {
+    margin-bottom: 1rem;
+}
+
+.info-block .name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 0.25rem;
+}
+
+.info-block .specialty {
+    font-size: 0.95rem;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-block-detail {
+    font-size: 0.9rem;
+    color: #555;
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.info-block-detail svg {
+    margin-right: 8px;
+    color: #888;
+}
+
+.details-block {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    margin-top: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.detail-item-icon {
+    font-size: 1.25rem;
+    color: #007bff;
+    margin-right: 1rem;
+    width: 25px;
+    text-align: center;
+}
+
+.detail-item strong {
+    font-weight: 600;
+    margin-right: 0.5rem;
+} 

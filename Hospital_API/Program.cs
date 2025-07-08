@@ -191,6 +191,8 @@ builder.Services.AddScoped<IDoctorScheduleService, DoctorScheduleService>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IRoomService, RoomService>();
 
+builder.Services.AddScoped<IEmailService, EmailService>();
+
 
 var app = builder.Build();
 

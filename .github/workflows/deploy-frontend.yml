@@ -11,6 +11,10 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     
+    permissions:
+      pull-requests: read
+      contents: read
+
     # Path filter: Only run this job if files in the React app directory have changed.
     defaults:
       run:

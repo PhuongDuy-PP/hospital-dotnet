@@ -82,6 +82,13 @@ jobs:
             -p 8080:8080 \
             -e ASPNETCORE_URLS=http://+:8080 \
             -e "ConnectionStrings__DefaultConnection=${{ secrets.ASPNETCORE_CONNECTIONSTRING }}" \
+            -e "SendGrid__ApiKey=${{ secrets.SENDGRID_API_KEY }}" \
+            -e "SendGrid__SenderEmail=${{ secrets.SENDGRID_SENDER_EMAIL }}" \
+            -e "SendGrid__SenderName=${{ secrets.SENDGRID_SENDER_NAME }}" \
+            -e "Jwt__Key=${{ secrets.JWT_KEY }}" \
+            -e "Jwt__Issuer=${{ secrets.JWT_ISSUER }}" \
+            -e "Jwt__Audience=${{ secrets.JWT_AUDIENCE }}" \
+            -e "AllowedHosts=${{ secrets.ALLOWED_HOSTS }}" \
             $IMAGE_PULL_TAG
           
           # --- Debugging Step ---

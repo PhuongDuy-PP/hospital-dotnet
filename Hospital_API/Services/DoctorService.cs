@@ -14,7 +14,6 @@ namespace Hospital_API.Services
             _repo = repo;
             _userRepo = userRepo;
         }
-
         public async Task<IEnumerable<DoctorDTO>> GetAllAsync()
         {
             var doctors = await _repo.GetAllAsync();
